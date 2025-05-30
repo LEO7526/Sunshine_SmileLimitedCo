@@ -1,0 +1,45 @@
+﻿# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+bin/
+obj/
+
+# NuGet packages
+*.nupkg
+packages/
+*.snupkg
+
+# Test results
+TestResults/
+*.trx
+
+# Publish output
+publish/
+out/
+
+# User-specific files
+*.vspscc
+*.vssscc
+
+# Visual Studio Code
+.vscode/
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Others
+*.log
+*.tmp
+*.cache
+*.pdb
+*.dbmdl
+*.db
+*.bak
+*.swp
+_ReSharper*/

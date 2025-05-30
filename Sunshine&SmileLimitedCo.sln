@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sunshine&SmileLimitedCo", "Sunshine&SmileLimitedCo\Sunshine&SmileLimitedCo.csproj", "{01AC6372-3226-4739-A893-2491D289C367}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01AC6372-3226-4739-A893-2491D289C367}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01AC6372-3226-4739-A893-2491D289C367}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01AC6372-3226-4739-A893-2491D289C367}.Debug|x64.ActiveCfg = Debug|x64
+		{01AC6372-3226-4739-A893-2491D289C367}.Debug|x64.Build.0 = Debug|x64
+		{01AC6372-3226-4739-A893-2491D289C367}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01AC6372-3226-4739-A893-2491D289C367}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01AC6372-3226-4739-A893-2491D289C367}.Release|x64.ActiveCfg = Release|x64
+		{01AC6372-3226-4739-A893-2491D289C367}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E6DF5FB4-0E40-4918-8BA8-F5C9586A5F8A}
+	EndGlobalSection
+EndGlobal
