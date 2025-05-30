@@ -1,4 +1,5 @@
 ﻿using Sunshine_SmileLimitedCo;
+using Sunshine_SmileLimitedCo.Sales_Department;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Sunshine_SmileLimitedCo
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form3());
+            Application.Run(new View_and_Edit_Order());
         }
     }
 }
