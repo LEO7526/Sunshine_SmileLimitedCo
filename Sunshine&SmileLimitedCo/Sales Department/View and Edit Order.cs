@@ -12,6 +12,8 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
         public View_and_Edit_Order()
         {
             InitializeComponent();
+            dgvOrders.AutoGenerateColumns = true;
+            dgvOrders.CellDoubleClick += dgvOrders_CellDoubleClick;
             InitializeOrderControls();
             LoadOrders();
         }
@@ -46,13 +48,13 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
                 {
                     conn.Open();
                     string query = @"SELECT 
-                        oid AS 'Order ID', 
-                        odate AS 'Order Date', 
-                        pid AS 'Product ID', 
-                        oqty AS 'Quantity', 
-                        ocost AS 'Total Cost', 
-                        cid AS 'Customer ID' 
-                        FROM Orders";
+                            oid AS 'Order ID', 
+                            CAST(odate AS CHAR) AS 'Order Date', 
+                            pid AS 'Product ID', 
+                            oqty AS 'Quantity', 
+                            ocost AS 'Total Cost', 
+                            cid AS 'Customer ID' 
+                            FROM Orders";
                     using (var cmd = new MySqlCommand(query, conn))
                     using (var adapter = new MySqlDataAdapter(cmd))
                     {
@@ -83,7 +85,6 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
             string sort = "";
             if (cmbSortColumn.SelectedIndex != -1)
             {
-                dgvOrders.AutoGenerateColumns = true;
                 string sortColumn = cmbSortColumn.SelectedItem.ToString();
                 string sortDirection = chkDescending.Checked ? "DESC" : "ASC";
                 sort = $"[{sortColumn}] {sortDirection}";
@@ -107,6 +108,29 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
             {
                 MessageBox.Show($"Database connection failed: {ex.Message}");
                 return null;
+            }
+        }
+
+        // Handle double-click on a row to open detailed order info
+        private void dgvOrders_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && dgvOrders.Rows[e.RowIndex].Cells["Order ID"].Value != null)
+            {
+                // Retrieve order details from the selected row
+                var row = dgvOrders.Rows[e.RowIndex];
+                string orderId = row.Cells["Order ID"].Value.ToString();
+                string orderDate = row.Cells["Order Date"].Value.ToString();
+                string productId = row.Cells["Product ID"].Value.ToString();
+                string quantity = row.Cells["Quantity"].Value.ToString();
+                string totalCost = row.Cells["Total Cost"].Value.ToString();
+                string customerId = row.Cells["Customer ID"].Value.ToString();
+
+                // Open the detailedOrderInfo form and pass the order details
+                var detailForm = new detailedOrderInfo(orderId, orderDate, productId, quantity, totalCost, customerId);
+                detailForm.ShowDialog();
+
+                // Optionally, reload orders after editing
+                LoadOrders();
             }
         }
     }

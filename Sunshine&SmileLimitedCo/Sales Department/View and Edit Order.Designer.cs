@@ -36,6 +36,7 @@
             this.chkAscending = new System.Windows.Forms.CheckBox();
             this.chkDescending = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOrders)).BeginInit();
             this.SuspendLayout();
             // 
@@ -51,7 +52,7 @@
             // 
             // txtFilterCustomerId
             // 
-            this.txtFilterCustomerId.Location = new System.Drawing.Point(248, 456);
+            this.txtFilterCustomerId.Location = new System.Drawing.Point(246, 458);
             this.txtFilterCustomerId.Name = "txtFilterCustomerId";
             this.txtFilterCustomerId.Size = new System.Drawing.Size(378, 29);
             this.txtFilterCustomerId.TabIndex = 1;
@@ -59,7 +60,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(53, 459);
+            this.label1.Location = new System.Drawing.Point(36, 461);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(173, 18);
             this.label1.TabIndex = 2;
@@ -68,14 +69,14 @@
             // cmbSortColumn
             // 
             this.cmbSortColumn.FormattingEnabled = true;
-            this.cmbSortColumn.Location = new System.Drawing.Point(248, 500);
+            this.cmbSortColumn.Location = new System.Drawing.Point(948, 453);
             this.cmbSortColumn.Name = "cmbSortColumn";
             this.cmbSortColumn.Size = new System.Drawing.Size(121, 26);
             this.cmbSortColumn.TabIndex = 3;
             // 
             // btnApplyFilterSort
             // 
-            this.btnApplyFilterSort.Location = new System.Drawing.Point(246, 591);
+            this.btnApplyFilterSort.Location = new System.Drawing.Point(246, 637);
             this.btnApplyFilterSort.Name = "btnApplyFilterSort";
             this.btnApplyFilterSort.Size = new System.Drawing.Size(127, 52);
             this.btnApplyFilterSort.TabIndex = 4;
@@ -105,17 +106,27 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(36, 508);
+            this.label2.Location = new System.Drawing.Point(696, 461);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(206, 18);
             this.label2.TabIndex = 7;
             this.label2.Text = "Search By Other Parameters";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(39, 550);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(75, 18);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "Sorted in ";
+            // 
             // View_and_Edit_Order
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1435, 682);
+            this.ClientSize = new System.Drawing.Size(1435, 701);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.chkDescending);
             this.Controls.Add(this.chkAscending);
@@ -142,5 +153,6 @@
         private System.Windows.Forms.CheckBox chkAscending;
         private System.Windows.Forms.CheckBox chkDescending;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
     }
 }

@@ -165,6 +165,9 @@
     <EmbeddedResource Include="Sales Department\CreateOrder.resx">
       <DependentUpon>CreateOrder.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Sales Department\detailedOrderInfo.resx">
+      <DependentUpon>detailedOrderInfo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Sales Department\Form3.resx">
       <DependentUpon>Form3.cs</DependentUpon>
     </EmbeddedResource>
