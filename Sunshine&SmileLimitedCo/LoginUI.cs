@@ -1,6 +1,5 @@
-﻿using System;
-using System.Data;
-using System.Drawing;
+﻿
+using System;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 
@@ -8,12 +7,12 @@ namespace Sunshine_SmileLimitedCo
 {
     public partial class FormLogin : Form
     {
-        public bool Login = false;
+        public string StaffId { get; private set; }
+        public string StaffRole { get; private set; }
 
         public FormLogin()
         {
             InitializeComponent();
-            Login = false;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -23,10 +22,12 @@ namespace Sunshine_SmileLimitedCo
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            if (ValidateLogin(txtUsername.Text, txtPassword.Text, out string userRole))
+            if (ValidateLogin(txtUsername.Text, txtPassword.Text, out string staffId, out string userRole))
             {
-                Login = true;
-                OpenForm(userRole);
+                StaffId = staffId;
+                StaffRole = userRole;
+                this.DialogResult = DialogResult.OK;
+                this.Close();
             }
             else
             {
@@ -34,8 +35,9 @@ namespace Sunshine_SmileLimitedCo
             }
         }
 
-        private bool ValidateLogin(string username, string password, out string userRole)
+        private bool ValidateLogin(string username, string password, out string staffId, out string userRole)
         {
+            staffId = null;
             userRole = null;
             string MySqlCon = "server=127.0.0.1;user=root;password=;database=projectdb";
 
@@ -44,18 +46,20 @@ namespace Sunshine_SmileLimitedCo
                 try
                 {
                     conn.Open();
-                    string query = "SELECT srole FROM staff WHERE sname=@username AND spassword=@password";
-
+                    string query = "SELECT sid, srole FROM staff WHERE sname=@username AND spassword=@password";
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@username", username);
                         cmd.Parameters.AddWithValue("@password", password);
 
-                        object result = cmd.ExecuteScalar();
-                        if (result != null)
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            userRole = result.ToString();
-                            return true;
+                            if (reader.Read())
+                            {
+                                staffId = reader["sid"].ToString();
+                                userRole = reader["srole"].ToString();
+                                return true;
+                            }
                         }
                     }
                 }
@@ -65,22 +69,6 @@ namespace Sunshine_SmileLimitedCo
                 }
             }
             return false;
-        }
-
-        private void OpenForm(string userRole)
-        {
-            if (userRole == "Sales Manager")
-            {
-                this.Hide();
-                CreateOrder mainForm = new CreateOrder(); 
-                mainForm.ShowDialog();
-            }
-            else
-            {
-                this.Hide();
-                InventoryRecord form1 = new InventoryRecord(userRole);
-                form1.ShowDialog();
-            }
         }
 
         private void txtUsername_KeyPress(object sender, KeyPressEventArgs e)

@@ -1,27 +1,28 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Sunshine_SmileLimitedCo.Sales_Department
 {
     public partial class detailedOrderInfo : Form
     {
+        private readonly string staffId;
+        private readonly string staffRole;
+
         public detailedOrderInfo()
         {
             InitializeComponent();
-            // Ensure event handlers are wired up if not done in Designer
-            btnSave.Click += btnSave_Click;
-            btnDelete.Click += btnDelete_Click;
         }
 
-        public detailedOrderInfo(string orderId, string orderDate, string productId, string quantity, string totalCost, string customerId)
+        public detailedOrderInfo(
+            string orderId,
+            string orderDate,
+            string productId,
+            string quantity,
+            string totalCost,
+            string customerId,
+            string staffId,
+            string staffRole)
             : this()
         {
             txtOrderId.Text = orderId;
@@ -30,12 +31,12 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
             txtQuantity.Text = quantity;
             txtTotalCost.Text = totalCost;
             txtCustomerId.Text = customerId;
+            this.staffId = staffId;
+            this.staffRole = staffRole;
         }
 
-        // Input validation method
         private bool ValidateInputs()
         {
-            // Required fields
             if (string.IsNullOrWhiteSpace(txtOrderId.Text) ||
                 string.IsNullOrWhiteSpace(txtOrderDate.Text) ||
                 string.IsNullOrWhiteSpace(txtProductId.Text) ||
@@ -46,8 +47,6 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
                 MessageBox.Show("All fields are required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
-
-            // Numeric validation
             if (!int.TryParse(txtQuantity.Text, out int qty) || qty < 0)
             {
                 MessageBox.Show("Quantity must be a non-negative integer.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -58,20 +57,14 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
                 MessageBox.Show("Total Cost must be a non-negative number.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
-
-            // Date validation
             if (!DateTime.TryParse(txtOrderDate.Text, out DateTime orderDate))
             {
                 MessageBox.Show("Order Date must be a valid date.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
-
-            // Add more validation as needed
-
             return true;
         }
 
-        // Save button click event
         private void btnSave_Click(object sender, EventArgs e)
         {
             if (!ValidateInputs())
@@ -101,6 +94,11 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
+                            LogOrderChange(
+                                txtOrderId.Text,
+                                "UPDATE",
+                                $"Order updated: Date={txtOrderDate.Text}, ProductID={txtProductId.Text}, Quantity={txtQuantity.Text}, TotalCost={txtTotalCost.Text}, CustomerID={txtCustomerId.Text}"
+                            );
                             MessageBox.Show("Order details saved successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             this.DialogResult = DialogResult.OK;
                             this.Close();
@@ -118,7 +116,6 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
             }
         }
 
-        // Delete button click event
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtOrderId.Text))
@@ -149,6 +146,11 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
+                            LogOrderChange(
+                                txtOrderId.Text,
+                                "DELETE",
+                                $"Order deleted: OrderID={txtOrderId.Text}"
+                            );
                             MessageBox.Show("Order deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             this.DialogResult = DialogResult.OK;
                             this.Close();
@@ -163,6 +165,33 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
             catch (Exception ex)
             {
                 MessageBox.Show("Error deleting order: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void LogOrderChange(string orderId, string changeType, string changeDetails)
+        {
+            try
+            {
+                using (var conn = new MySqlConnection("server=127.0.0.1;user=root;password=;database=projectdb"))
+                {
+                    conn.Open();
+                    string query = @"INSERT INTO order_change_log (order_id, staff_id, staff_role, change_type, change_details, change_time)
+                                     VALUES (@orderId, @staffId, @staffRole, @changeType, @changeDetails, @changeTime)";
+                    using (var cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@orderId", orderId);
+                        cmd.Parameters.AddWithValue("@staffId", staffId);
+                        cmd.Parameters.AddWithValue("@staffRole", staffRole);
+                        cmd.Parameters.AddWithValue("@changeType", changeType);
+                        cmd.Parameters.AddWithValue("@changeDetails", changeDetails);
+                        cmd.Parameters.AddWithValue("@changeTime", DateTime.Now);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to log change: " + ex.Message, "Log Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

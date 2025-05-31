@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿
+using MySql.Data.MySqlClient;
 using System;
 using System.Data;
 using System.Windows.Forms;
@@ -8,20 +9,22 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
     public partial class View_and_Edit_Order : Form
     {
         private DataTable ordersTable;
+        private readonly string staffId;
+        private readonly string staffRole;
 
-        public View_and_Edit_Order()
+        public View_and_Edit_Order(string staffId, string staffRole)
         {
             InitializeComponent();
+            this.staffId = staffId;
+            this.staffRole = staffRole;
             dgvOrders.AutoGenerateColumns = true;
             dgvOrders.CellDoubleClick += dgvOrders_CellDoubleClick;
             InitializeOrderControls();
             LoadOrders();
         }
 
-        // Initialize sorting/filtering controls (if not set up in Designer)
         private void InitializeOrderControls()
         {
-            // Populate sort column ComboBox
             cmbSortColumn.Items.Clear();
             cmbSortColumn.Items.Add("Order ID");
             cmbSortColumn.Items.Add("Order Date");
@@ -29,16 +32,11 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
             cmbSortColumn.Items.Add("Quantity");
             cmbSortColumn.Items.Add("Total Cost");
             cmbSortColumn.Items.Add("Customer ID");
-            cmbSortColumn.SelectedIndex = -1; // No sort by default
-
-            // Ensure descending checkbox is unchecked by default
+            cmbSortColumn.SelectedIndex = -1;
             chkDescending.Checked = false;
-
-            // Wire up filter/sort button
             btnApplyFilterSort.Click += btnApplyFilterSort_Click;
         }
 
-        // Load all orders from the database
         private void LoadOrders()
         {
             using (var conn = OpenDatabaseConnection())
@@ -70,7 +68,6 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
             }
         }
 
-        // Apply sorting and filtering based on user input
         private void btnApplyFilterSort_Click(object sender, EventArgs e)
         {
             if (ordersTable == null) return;
@@ -96,7 +93,6 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
             dgvOrders.DataSource = dv;
         }
 
-        // Helper: Open MySQL connection (adjust connection string as needed)
         private MySqlConnection OpenDatabaseConnection()
         {
             try
@@ -111,12 +107,10 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
             }
         }
 
-        // Handle double-click on a row to open detailed order info
         private void dgvOrders_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && dgvOrders.Rows[e.RowIndex].Cells["Order ID"].Value != null)
             {
-                // Retrieve order details from the selected row
                 var row = dgvOrders.Rows[e.RowIndex];
                 string orderId = row.Cells["Order ID"].Value.ToString();
                 string orderDate = row.Cells["Order Date"].Value.ToString();
@@ -125,11 +119,9 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
                 string totalCost = row.Cells["Total Cost"].Value.ToString();
                 string customerId = row.Cells["Customer ID"].Value.ToString();
 
-                // Open the detailedOrderInfo form and pass the order details
-                var detailForm = new detailedOrderInfo(orderId, orderDate, productId, quantity, totalCost, customerId);
+                var detailForm = new detailedOrderInfo(orderId, orderDate, productId, quantity, totalCost, customerId, staffId, staffRole);
                 detailForm.ShowDialog();
 
-                // Optionally, reload orders after editing
                 LoadOrders();
             }
         }

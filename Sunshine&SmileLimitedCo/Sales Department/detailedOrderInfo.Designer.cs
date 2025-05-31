@@ -49,7 +49,7 @@
             this.txtOrderId.Location = new System.Drawing.Point(176, 52);
             this.txtOrderId.Name = "txtOrderId";
             this.txtOrderId.ReadOnly = true;
-            this.txtOrderId.Size = new System.Drawing.Size(100, 29);
+            this.txtOrderId.Size = new System.Drawing.Size(161, 29);
             this.txtOrderId.TabIndex = 0;
             // 
             // label1
@@ -74,7 +74,7 @@
             // 
             this.txtOrderDate.Location = new System.Drawing.Point(176, 105);
             this.txtOrderDate.Name = "txtOrderDate";
-            this.txtOrderDate.Size = new System.Drawing.Size(100, 29);
+            this.txtOrderDate.Size = new System.Drawing.Size(161, 29);
             this.txtOrderDate.TabIndex = 2;
             // 
             // label3
@@ -90,7 +90,7 @@
             // 
             this.txtQuantity.Location = new System.Drawing.Point(176, 223);
             this.txtQuantity.Name = "txtQuantity";
-            this.txtQuantity.Size = new System.Drawing.Size(100, 29);
+            this.txtQuantity.Size = new System.Drawing.Size(161, 29);
             this.txtQuantity.TabIndex = 6;
             // 
             // label4
@@ -106,7 +106,7 @@
             // 
             this.txtProductId.Location = new System.Drawing.Point(176, 170);
             this.txtProductId.Name = "txtProductId";
-            this.txtProductId.Size = new System.Drawing.Size(100, 29);
+            this.txtProductId.Size = new System.Drawing.Size(161, 29);
             this.txtProductId.TabIndex = 4;
             // 
             // label5
@@ -123,7 +123,7 @@
             this.txtCustomerId.Location = new System.Drawing.Point(176, 338);
             this.txtCustomerId.Name = "txtCustomerId";
             this.txtCustomerId.ReadOnly = true;
-            this.txtCustomerId.Size = new System.Drawing.Size(100, 29);
+            this.txtCustomerId.Size = new System.Drawing.Size(161, 29);
             this.txtCustomerId.TabIndex = 10;
             // 
             // label6
@@ -139,7 +139,7 @@
             // 
             this.txtTotalCost.Location = new System.Drawing.Point(176, 285);
             this.txtTotalCost.Name = "txtTotalCost";
-            this.txtTotalCost.Size = new System.Drawing.Size(100, 29);
+            this.txtTotalCost.Size = new System.Drawing.Size(161, 29);
             this.txtTotalCost.TabIndex = 8;
             // 
             // btnSave
@@ -160,7 +160,6 @@
             this.btnDelete.TabIndex = 13;
             this.btnDelete.Text = "Delete Order";
             this.btnDelete.UseVisualStyleBackColor = true;
-   
             // 
             // detailedOrderInfo
             // 
