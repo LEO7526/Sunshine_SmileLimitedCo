@@ -1,20 +1,25 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Configuration;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Sunshine_SmileLimitedCo.Sales_Department
 {
-    public partial class detailedOrderInfo : Form
+    public partial class DetailedOrderInfo : Form
     {
         private readonly string staffId;
         private readonly string staffRole;
+        private readonly string connStr;
 
-        public detailedOrderInfo()
+        public DetailedOrderInfo()
         {
             InitializeComponent();
+            connStr = ConfigurationManager.ConnectionStrings["projectdb"]?.ConnectionString
+                      ?? "server=127.0.0.1;user=root;password=;database=projectdb";
         }
 
-        public detailedOrderInfo(
+        public DetailedOrderInfo(
             string orderId,
             string orderDate,
             string productId,
@@ -72,16 +77,19 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
 
             try
             {
-                using (var conn = new MySqlConnection("server=127.0.0.1;user=root;password=;database=projectdb"))
+                // Get original order values before updating
+                var originalOrder = GetOriginalOrder(txtOrderId.Text);
+
+                using (var conn = new MySqlConnection(connStr))
                 {
                     conn.Open();
-                    string query = @"UPDATE Orders 
-                                         SET odate = @OrderDate, 
-                                             pid = @ProductId, 
-                                             oqty = @Quantity, 
-                                             ocost = @TotalCost, 
-                                             cid = @CustomerId
-                                         WHERE oid = @OrderId";
+                    string query = @"UPDATE Orders   
+                                            SET odate = @OrderDate,   
+                                                pid = @ProductId,   
+                                                oqty = @Quantity,   
+                                                ocost = @TotalCost,   
+                                                cid = @CustomerId  
+                                            WHERE oid = @OrderId";
                     using (var cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@OrderId", txtOrderId.Text);
@@ -94,10 +102,12 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
+                            // Log only the changed fields, before and after
+                            string changeDetails = BuildChangeDetails(originalOrder);
                             LogOrderChange(
                                 txtOrderId.Text,
                                 "UPDATE",
-                                $"Order updated: Date={txtOrderDate.Text}, ProductID={txtProductId.Text}, Quantity={txtQuantity.Text}, TotalCost={txtTotalCost.Text}, CustomerID={txtCustomerId.Text}"
+                                changeDetails
                             );
                             MessageBox.Show("Order details saved successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             this.DialogResult = DialogResult.OK;
@@ -135,7 +145,10 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
 
             try
             {
-                using (var conn = new MySqlConnection("server=127.0.0.1;user=root;password=;database=projectdb"))
+                // Optionally, get original data before delete for logging
+                var originalOrder = GetOriginalOrder(txtOrderId.Text);
+
+                using (var conn = new MySqlConnection(connStr))
                 {
                     conn.Open();
                     string query = "DELETE FROM Orders WHERE oid = @OrderId";
@@ -146,10 +159,11 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
+                            string details = $"Order deleted: {FormatOrderDetails(originalOrder)}";
                             LogOrderChange(
                                 txtOrderId.Text,
                                 "DELETE",
-                                $"Order deleted: OrderID={txtOrderId.Text}"
+                                details
                             );
                             MessageBox.Show("Order deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             this.DialogResult = DialogResult.OK;
@@ -172,16 +186,16 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
         {
             try
             {
-                using (var conn = new MySqlConnection("server=127.0.0.1;user=root;password=;database=projectdb"))
+                using (var conn = new MySqlConnection(connStr))
                 {
                     conn.Open();
-                    string query = @"INSERT INTO order_change_log (order_id, staff_id, staff_role, change_type, change_details, change_time)
-                                     VALUES (@orderId, @staffId, @staffRole, @changeType, @changeDetails, @changeTime)";
+                    string query = @"INSERT INTO order_change_log (order_id, staff_id, staff_role, change_type, change_details, change_time)  
+                                        VALUES (@orderId, @staffId, @staffRole, @changeType, @changeDetails, @changeTime)";
                     using (var cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@orderId", orderId);
-                        cmd.Parameters.AddWithValue("@staffId", staffId);
-                        cmd.Parameters.AddWithValue("@staffRole", staffRole);
+                        cmd.Parameters.AddWithValue("@staffId", staffId ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@staffRole", staffRole ?? (object)DBNull.Value);
                         cmd.Parameters.AddWithValue("@changeType", changeType);
                         cmd.Parameters.AddWithValue("@changeDetails", changeDetails);
                         cmd.Parameters.AddWithValue("@changeTime", DateTime.Now);
@@ -193,6 +207,66 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
             {
                 MessageBox.Show("Failed to log change: " + ex.Message, "Log Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        // Helper methods
+
+        // Fetches the original order from DB, returns as tuple
+        private (string OrderDate, string ProductId, string Quantity, string TotalCost, string CustomerId) GetOriginalOrder(string orderId)
+        {
+            using (var conn = new MySqlConnection(connStr))
+            {
+                conn.Open();
+                string query = "SELECT odate, pid, oqty, ocost, cid FROM Orders WHERE oid = @OrderId";
+                using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@OrderId", orderId);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return (
+                                reader["odate"].ToString(),
+                                reader["pid"].ToString(),
+                                reader["oqty"].ToString(),
+                                reader["ocost"].ToString(),
+                                reader["cid"].ToString()
+                            );
+                        }
+                        else
+                        {
+                            return (null, null, null, null, null);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Builds a string showing which fields changed, with before and after values
+        private string BuildChangeDetails((string OrderDate, string ProductId, string Quantity, string TotalCost, string CustomerId) original)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Order updated:");
+            if (original.OrderDate != txtOrderDate.Text)
+                sb.AppendLine($" - OrderDate: '{original.OrderDate}' → '{txtOrderDate.Text}'");
+            if (original.ProductId != txtProductId.Text)
+                sb.AppendLine($" - ProductId: '{original.ProductId}' → '{txtProductId.Text}'");
+            if (original.Quantity != txtQuantity.Text)
+                sb.AppendLine($" - Quantity: '{original.Quantity}' → '{txtQuantity.Text}'");
+            if (original.TotalCost != txtTotalCost.Text)
+                sb.AppendLine($" - TotalCost: '{original.TotalCost}' → '{txtTotalCost.Text}'");
+            if (original.CustomerId != txtCustomerId.Text)
+                sb.AppendLine($" - CustomerId: '{original.CustomerId}' → '{txtCustomerId.Text}'");
+            if (sb.Length == "Order updated:\n".Length)
+                sb.AppendLine(" (No actual changes detected)");
+            return sb.ToString();
+        }
+
+        // Formats the order details for delete log
+        private string FormatOrderDetails((string OrderDate, string ProductId, string Quantity, string TotalCost, string CustomerId) order)
+        {
+            if (order.OrderDate == null) return "(Order not found)";
+            return $"Date={order.OrderDate}, ProductID={order.ProductId}, Quantity={order.Quantity}, TotalCost={order.TotalCost}, CustomerID={order.CustomerId}";
         }
     }
 }

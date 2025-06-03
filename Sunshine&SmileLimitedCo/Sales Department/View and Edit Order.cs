@@ -119,7 +119,7 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
                 string totalCost = row.Cells["Total Cost"].Value.ToString();
                 string customerId = row.Cells["Customer ID"].Value.ToString();
 
-                var detailForm = new detailedOrderInfo(orderId, orderDate, productId, quantity, totalCost, customerId, staffId, staffRole);
+                var detailForm = new DetailedOrderInfo(orderId, orderDate, productId, quantity, totalCost, customerId, staffId, staffRole);
                 detailForm.ShowDialog();
 
                 LoadOrders();

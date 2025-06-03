@@ -37,6 +37,7 @@ namespace Sunshine_SmileLimitedCo
             Panel panel = CreateScrollingPanel();
             Controls.Add(panel);
             LoadImages(panel);
+            LoadCustomerIds();
         }
 
         // Set up form properties
@@ -144,6 +145,33 @@ namespace Sunshine_SmileLimitedCo
             lbOrderid.Text = orderID;
         }
 
+        // Load Customer IDs into the ComboBox you drew in the Designer
+        private void LoadCustomerIds()
+        {
+            try
+            {
+                string MySqlCon = "server=127.0.0.1;user=root;password=;database=projectdb";
+                using (var conn = new MySqlConnection(MySqlCon))
+                {
+                    conn.Open();
+                    string query = "SELECT cid FROM customer";
+                    using (var cmd = new MySqlCommand(query, conn))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        cmbCustomerId.Items.Clear();
+                        while (reader.Read())
+                        {
+                            cmbCustomerId.Items.Add(reader["cid"].ToString());
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to load customer IDs: {ex.Message}");
+            }
+        }
+
         // Handle order button click: validate input and process the order
         private void button1_Click(object sender, EventArgs e)
         {
@@ -155,9 +183,10 @@ namespace Sunshine_SmileLimitedCo
             }
 
             // Validate customer ID
-            if (string.IsNullOrWhiteSpace(txtCustomerId.Text))
+            string selectedCustomerId = cmbCustomerId.SelectedItem?.ToString();
+            if (string.IsNullOrWhiteSpace(selectedCustomerId))
             {
-                MessageBox.Show("Please enter a Customer ID.");
+                MessageBox.Show("Please select a Customer ID.");
                 return;
             }
 
@@ -176,16 +205,8 @@ namespace Sunshine_SmileLimitedCo
                 try
                 {
                     conn.Open();
-
-                    // Check if customer ID exists
-                    if (!CustomerIdExists(txtCustomerId.Text, conn))
-                    {
-                        MessageBox.Show("Customer ID does not exist.");
-                        return;
-                    }
-
-                    // Now process the order
-                    ProcessOrder(conn);
+                    // ComboBox only allows valid IDs
+                    ProcessOrder(conn, selectedCustomerId);
                 }
                 catch (Exception ex)
                 {
@@ -210,7 +231,7 @@ namespace Sunshine_SmileLimitedCo
         }
 
         // Query product info and validate the order
-        private void ProcessOrder(MySqlConnection conn)
+        private void ProcessOrder(MySqlConnection conn, string selectedCustomerId)
         {
             try
             {
@@ -222,7 +243,7 @@ namespace Sunshine_SmileLimitedCo
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
 
-                ValidateOrder(dt, conn);
+                ValidateOrder(dt, conn, selectedCustomerId);
             }
             catch (Exception ex)
             {
@@ -231,7 +252,7 @@ namespace Sunshine_SmileLimitedCo
         }
 
         // Validate order quantity and stock, then save order and update product quantity
-        private void ValidateOrder(DataTable dt, MySqlConnection conn)
+        private void ValidateOrder(DataTable dt, MySqlConnection conn, string selectedCustomerId)
         {
             try
             {
@@ -258,8 +279,8 @@ namespace Sunshine_SmileLimitedCo
                         lbTotals.Text = (orderedQty * price).ToString("C2");
                         MessageBox.Show("Order Created Successfully!", "Confirmation");
 
-                        // Save Order to Database with Order ID and Customer ID
-                        SaveOrderToDatabase(orderId, productId, orderedQty, txtCustomerId.Text, conn);
+                        // Save Order to Database with Order ID and selected Customer ID
+                        SaveOrderToDatabase(orderId, productId, orderedQty, selectedCustomerId, conn);
 
                         // Reduce Product Quantity in the database
                         UpdateProductQuantity(productId, orderedQty, conn);
@@ -339,16 +360,6 @@ namespace Sunshine_SmileLimitedCo
                 decimal price = 0;
                 decimal.TryParse(lbPcost.Text.Replace("$", ""), out price);
                 lbTotals.Text = (qty * price).ToString("C2"); // Format as currency
-            }
-        }
-        private bool CustomerIdExists(string customerId, MySqlConnection conn)
-        {
-            string query = "SELECT COUNT(*) FROM customers WHERE cid = @CustomerId";
-            using (MySqlCommand cmd = new MySqlCommand(query, conn))
-            {
-                cmd.Parameters.AddWithValue("@CustomerId", customerId);
-                object result = cmd.ExecuteScalar();
-                return Convert.ToInt32(result) > 0;
             }
         }
     }

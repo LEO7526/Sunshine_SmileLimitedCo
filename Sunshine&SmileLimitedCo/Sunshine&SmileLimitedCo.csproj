@@ -121,6 +121,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Afterservice\complaint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Afterservice\complaint.Designer.cs">
+      <DependentUpon>complaint.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DeliveryNote\DeliveryNote.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DeliveryNote\DeliveryNote.Designer.cs">
+      <DependentUpon>DeliveryNote.cs</DependentUpon>
+    </Compile>
     <Compile Include="Inventory\InventoryRecord.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -133,10 +145,10 @@
     <Compile Include="LoginUI.Designer.cs">
       <DependentUpon>LoginUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Sales Department\CreateOrder.cs">
+    <Compile Include="CreateOrder.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Sales Department\CreateOrder.Designer.cs">
+    <Compile Include="CreateOrder.Designer.cs">
       <DependentUpon>CreateOrder.cs</DependentUpon>
     </Compile>
     <Compile Include="Sales Department\detailedOrderInfo.cs">
@@ -153,16 +165,25 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sales Department\OrderNavigationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sales Department\OrderNavigationForm.Designer.cs">
+      <DependentUpon>OrderNavigationForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Sales Department\View and Edit Order.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Sales Department\View and Edit Order.Designer.cs">
       <DependentUpon>View and Edit Order.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="DeliveryNote\DeliveryNote.resx">
+      <DependentUpon>DeliveryNote.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LoginUI.resx">
       <DependentUpon>LoginUI.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Sales Department\CreateOrder.resx">
+    <EmbeddedResource Include="CreateOrder.resx">
       <DependentUpon>CreateOrder.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Sales Department\detailedOrderInfo.resx">
@@ -181,6 +202,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Sales Department\OrderNavigationForm.resx">
+      <DependentUpon>OrderNavigationForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Sales Department\View and Edit Order.resx">
       <DependentUpon>View and Edit Order.cs</DependentUpon>
     </EmbeddedResource>

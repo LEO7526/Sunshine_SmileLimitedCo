@@ -1,16 +1,9 @@
 ﻿namespace Sunshine_SmileLimitedCo.Sales_Department
 {
-    partial class detailedOrderInfo
+    partial class DetailedOrderInfo : System.Windows.Forms.Form // Ensure the class inherits from Form
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +15,6 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             this.txtOrderId = new System.Windows.Forms.TextBox();
@@ -160,6 +149,7 @@
             this.btnDelete.TabIndex = 13;
             this.btnDelete.Text = "Delete Order";
             this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // detailedOrderInfo
             // 
