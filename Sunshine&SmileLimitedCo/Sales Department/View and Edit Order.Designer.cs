@@ -37,17 +37,33 @@
             this.chkDescending = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.Order_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Customer_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Product_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Quantity1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TotalCost1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Order_Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOrders)).BeginInit();
             this.SuspendLayout();
             // 
             // dgvOrders
             // 
+            this.dgvOrders.AllowUserToAddRows = false;
             this.dgvOrders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvOrders.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Order_ID,
+            this.Customer_ID,
+            this.Product_ID,
+            this.Quantity1,
+            this.TotalCost1,
+            this.Order_Date});
             this.dgvOrders.Location = new System.Drawing.Point(56, 26);
             this.dgvOrders.Name = "dgvOrders";
+            this.dgvOrders.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.dgvOrders.RowHeadersVisible = false;
             this.dgvOrders.RowHeadersWidth = 62;
             this.dgvOrders.RowTemplate.Height = 31;
-            this.dgvOrders.Size = new System.Drawing.Size(997, 386);
+            this.dgvOrders.Size = new System.Drawing.Size(1298, 386);
             this.dgvOrders.TabIndex = 0;
             // 
             // txtFilterCustomerId
@@ -78,7 +94,7 @@
             // 
             this.btnApplyFilterSort.Location = new System.Drawing.Point(246, 637);
             this.btnApplyFilterSort.Name = "btnApplyFilterSort";
-            this.btnApplyFilterSort.Size = new System.Drawing.Size(127, 52);
+            this.btnApplyFilterSort.Size = new System.Drawing.Size(128, 53);
             this.btnApplyFilterSort.TabIndex = 4;
             this.btnApplyFilterSort.Text = "Sort";
             this.btnApplyFilterSort.UseVisualStyleBackColor = true;
@@ -121,11 +137,60 @@
             this.label3.TabIndex = 8;
             this.label3.Text = "Sorted in ";
             // 
+            // Order_ID
+            // 
+            this.Order_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Order_ID.DataPropertyName = "Order ID";
+            this.Order_ID.HeaderText = "Order ID";
+            this.Order_ID.MinimumWidth = 8;
+            this.Order_ID.Name = "Order_ID";
+            // 
+            // Customer_ID
+            // 
+            this.Customer_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Customer_ID.DataPropertyName = "Customer ID";
+            this.Customer_ID.HeaderText = "Customer ID";
+            this.Customer_ID.MinimumWidth = 8;
+            this.Customer_ID.Name = "Customer_ID";
+            // 
+            // Product_ID
+            // 
+            this.Product_ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Product_ID.DataPropertyName = "Product ID";
+            this.Product_ID.HeaderText = "Product ID";
+            this.Product_ID.MinimumWidth = 8;
+            this.Product_ID.Name = "Product_ID";
+            // 
+            // Quantity1
+            // 
+            this.Quantity1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Quantity1.DataPropertyName = "Quantity";
+            this.Quantity1.HeaderText = "Quantity";
+            this.Quantity1.MinimumWidth = 8;
+            this.Quantity1.Name = "Quantity1";
+            // 
+            // TotalCost1
+            // 
+            this.TotalCost1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.TotalCost1.DataPropertyName = "Total Cost";
+            this.TotalCost1.HeaderText = "Total Cost";
+            this.TotalCost1.MinimumWidth = 8;
+            this.TotalCost1.Name = "TotalCost1";
+            // 
+            // Order_Date
+            // 
+            this.Order_Date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Order_Date.DataPropertyName = "Order Date";
+            this.Order_Date.FillWeight = 150F;
+            this.Order_Date.HeaderText = "Order Date";
+            this.Order_Date.MinimumWidth = 8;
+            this.Order_Date.Name = "Order_Date";
+            // 
             // View_and_Edit_Order
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1435, 701);
+            this.ClientSize = new System.Drawing.Size(1436, 701);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.chkDescending);
@@ -154,5 +219,11 @@
         private System.Windows.Forms.CheckBox chkDescending;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Order_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Customer_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Product_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Quantity1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TotalCost1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Order_Date;
     }
 }

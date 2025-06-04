@@ -1,5 +1,4 @@
-﻿
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using System;
 using System.Data;
 using System.Windows.Forms;
@@ -17,7 +16,7 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
             InitializeComponent();
             this.staffId = staffId;
             this.staffRole = staffRole;
-            dgvOrders.AutoGenerateColumns = true;
+            dgvOrders.AutoGenerateColumns = false;
             dgvOrders.CellDoubleClick += dgvOrders_CellDoubleClick;
             InitializeOrderControls();
             LoadOrders();
@@ -27,11 +26,12 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
         {
             cmbSortColumn.Items.Clear();
             cmbSortColumn.Items.Add("Order ID");
-            cmbSortColumn.Items.Add("Order Date");
+            cmbSortColumn.Items.Add("Customer ID");
             cmbSortColumn.Items.Add("Product ID");
             cmbSortColumn.Items.Add("Quantity");
             cmbSortColumn.Items.Add("Total Cost");
-            cmbSortColumn.Items.Add("Customer ID");
+            cmbSortColumn.Items.Add("Order Date");
+
             cmbSortColumn.SelectedIndex = -1;
             chkDescending.Checked = false;
             btnApplyFilterSort.Click += btnApplyFilterSort_Click;
@@ -109,15 +109,15 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
 
         private void dgvOrders_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0 && dgvOrders.Rows[e.RowIndex].Cells["Order ID"].Value != null)
+            if (e.RowIndex >= 0)
             {
                 var row = dgvOrders.Rows[e.RowIndex];
-                string orderId = row.Cells["Order ID"].Value.ToString();
-                string orderDate = row.Cells["Order Date"].Value.ToString();
-                string productId = row.Cells["Product ID"].Value.ToString();
-                string quantity = row.Cells["Quantity"].Value.ToString();
-                string totalCost = row.Cells["Total Cost"].Value.ToString();
-                string customerId = row.Cells["Customer ID"].Value.ToString();
+                string orderId = row.Cells["Order_ID"].Value?.ToString() ?? "";
+                string customerId = row.Cells["Customer_ID"].Value?.ToString() ?? "";
+                string orderDate = row.Cells["Order_Date"].Value?.ToString() ?? "";
+                string productId = row.Cells["Product_ID"].Value?.ToString() ?? "";
+                string quantity = row.Cells["Quantity1"].Value?.ToString() ?? "";
+                string totalCost = row.Cells["TotalCost1"].Value?.ToString() ?? "";
 
                 var detailForm = new DetailedOrderInfo(orderId, orderDate, productId, quantity, totalCost, customerId, staffId, staffRole);
                 detailForm.ShowDialog();

@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.txtUsername = new System.Windows.Forms.TextBox();
+            this.lbsId = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.txtPassword = new System.Windows.Forms.TextBox();
+            this.lbPassword = new System.Windows.Forms.TextBox();
             this.btnLogin = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -43,17 +43,17 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(462, 195);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(78, 18);
+            this.label1.Size = new System.Drawing.Size(65, 18);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Username";
+            this.label1.Text = "Staff ID";
             // 
-            // txtUsername
+            // lbsId
             // 
-            this.txtUsername.Location = new System.Drawing.Point(584, 191);
-            this.txtUsername.Name = "txtUsername";
-            this.txtUsername.Size = new System.Drawing.Size(202, 29);
-            this.txtUsername.TabIndex = 1;
-            this.txtUsername.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtUsername_KeyPress);
+            this.lbsId.Location = new System.Drawing.Point(584, 191);
+            this.lbsId.Name = "lbsId";
+            this.lbsId.Size = new System.Drawing.Size(202, 29);
+            this.lbsId.TabIndex = 1;
+            this.lbsId.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtUsername_KeyPress);
             // 
             // label2
             // 
@@ -64,13 +64,13 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Password";
             // 
-            // txtPassword
+            // lbPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(584, 255);
-            this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(202, 29);
-            this.txtPassword.TabIndex = 3;
-            this.txtPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyDown);
+            this.lbPassword.Location = new System.Drawing.Point(584, 255);
+            this.lbPassword.Name = "lbPassword";
+            this.lbPassword.Size = new System.Drawing.Size(202, 29);
+            this.lbPassword.TabIndex = 3;
+            this.lbPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyDown);
             // 
             // btnLogin
             // 
@@ -95,7 +95,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Location = new System.Drawing.Point(68, 127);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(298, 240);
             this.pictureBox1.TabIndex = 6;
@@ -110,9 +110,9 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnLogin);
-            this.Controls.Add(this.txtPassword);
+            this.Controls.Add(this.lbPassword);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.txtUsername);
+            this.Controls.Add(this.lbsId);
             this.Controls.Add(this.label1);
             this.Name = "FormLogin";
             this.Text = "Login";
@@ -125,9 +125,9 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtUsername;
+        private System.Windows.Forms.TextBox lbsId;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtPassword;
+        private System.Windows.Forms.TextBox lbPassword;
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.PictureBox pictureBox1;

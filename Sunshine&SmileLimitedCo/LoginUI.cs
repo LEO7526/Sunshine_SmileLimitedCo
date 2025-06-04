@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 
@@ -22,7 +21,7 @@ namespace Sunshine_SmileLimitedCo
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            if (ValidateLogin(txtUsername.Text, txtPassword.Text, out string staffId, out string userRole))
+            if (ValidateLogin(lbsId.Text, lbPassword.Text, out string staffId, out string userRole))
             {
                 StaffId = staffId;
                 StaffRole = userRole;
@@ -46,10 +45,11 @@ namespace Sunshine_SmileLimitedCo
                 try
                 {
                     conn.Open();
-                    string query = "SELECT sid, srole FROM staff WHERE sname=@username AND spassword=@password";
+                    string query = "SELECT sid, srole FROM staff WHERE sid=@staffId AND spassword=@password";
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@username", username);
+                        // Bug fix: Use username, not staffId, as parameter input
+                        cmd.Parameters.AddWithValue("@staffId", username);
                         cmd.Parameters.AddWithValue("@password", password);
 
                         using (var reader = cmd.ExecuteReader())
@@ -76,7 +76,7 @@ namespace Sunshine_SmileLimitedCo
             if (e.KeyChar == (char)Keys.Enter)
             {
                 e.Handled = true;
-                txtPassword.Focus();
+                lbPassword.Focus();
             }
         }
 

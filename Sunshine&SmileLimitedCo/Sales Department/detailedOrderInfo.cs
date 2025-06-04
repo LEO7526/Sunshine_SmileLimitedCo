@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Configuration;
+using System.Data;
 using System.Text;
 using System.Windows.Forms;
 
@@ -17,6 +18,7 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
             InitializeComponent();
             connStr = ConfigurationManager.ConnectionStrings["projectdb"]?.ConnectionString
                       ?? "server=127.0.0.1;user=root;password=;database=projectdb";
+            InitializeProductGrid();
         }
 
         public DetailedOrderInfo(
@@ -32,19 +34,35 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
         {
             txtOrderId.Text = orderId;
             txtOrderDate.Text = orderDate;
-            txtProductId.Text = productId;
             txtQuantity.Text = quantity;
             txtTotalCost.Text = totalCost;
             txtCustomerId.Text = customerId;
             this.staffId = staffId;
             this.staffRole = staffRole;
+
+            if (!string.IsNullOrEmpty(orderId))
+                LoadOrderProducts(orderId);
+        }
+
+        private void InitializeProductGrid()
+        {
+            // Assuming dataGridViewProducts is the name of the grid in Designer
+            dataGridViewProducts.Columns.Clear();
+            dataGridViewProducts.Columns.Add("ProductID", "productID");
+            dataGridViewProducts.Columns.Add("ProductName", "productName");
+            dataGridViewProducts.Columns.Add("ProductPrice", "unitPrice");
+            dataGridViewProducts.Columns.Add("ProductQty", "quantity");
+            dataGridViewProducts.Columns.Add("ProductAmount", "amount");
+
+            dataGridViewProducts.AllowUserToAddRows = false;
+            dataGridViewProducts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridViewProducts.MultiSelect = false;
         }
 
         private bool ValidateInputs()
         {
             if (string.IsNullOrWhiteSpace(txtOrderId.Text) ||
                 string.IsNullOrWhiteSpace(txtOrderDate.Text) ||
-                string.IsNullOrWhiteSpace(txtProductId.Text) ||
                 string.IsNullOrWhiteSpace(txtQuantity.Text) ||
                 string.IsNullOrWhiteSpace(txtTotalCost.Text) ||
                 string.IsNullOrWhiteSpace(txtCustomerId.Text))
@@ -54,7 +72,7 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
             }
             if (!int.TryParse(txtQuantity.Text, out int qty) || qty < 0)
             {
-                MessageBox.Show("Quantity must be a non-negative integer.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Product Quantity must be a non-negative integer.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (!decimal.TryParse(txtTotalCost.Text, out decimal cost) || cost < 0)
@@ -77,24 +95,21 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
 
             try
             {
-                // Get original order values before updating
                 var originalOrder = GetOriginalOrder(txtOrderId.Text);
 
                 using (var conn = new MySqlConnection(connStr))
                 {
                     conn.Open();
                     string query = @"UPDATE Orders   
-                                            SET odate = @OrderDate,   
-                                                pid = @ProductId,   
-                                                oqty = @Quantity,   
-                                                ocost = @TotalCost,   
-                                                cid = @CustomerId  
-                                            WHERE oid = @OrderId";
+                                        SET odate = @OrderDate,   
+                                            oqty = @Quantity,   
+                                            ocost = @TotalCost,   
+                                            cid = @CustomerId  
+                                        WHERE oid = @OrderId";
                     using (var cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@OrderId", txtOrderId.Text);
                         cmd.Parameters.AddWithValue("@OrderDate", txtOrderDate.Text);
-                        cmd.Parameters.AddWithValue("@ProductId", txtProductId.Text);
                         cmd.Parameters.AddWithValue("@Quantity", txtQuantity.Text);
                         cmd.Parameters.AddWithValue("@TotalCost", txtTotalCost.Text);
                         cmd.Parameters.AddWithValue("@CustomerId", txtCustomerId.Text);
@@ -102,7 +117,6 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
-                            // Log only the changed fields, before and after
                             string changeDetails = BuildChangeDetails(originalOrder);
                             LogOrderChange(
                                 txtOrderId.Text,
@@ -145,7 +159,6 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
 
             try
             {
-                // Optionally, get original data before delete for logging
                 var originalOrder = GetOriginalOrder(txtOrderId.Text);
 
                 using (var conn = new MySqlConnection(connStr))
@@ -182,6 +195,42 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
             }
         }
 
+        private void btnDeleteProduct_Click(object sender, EventArgs e)
+        {
+            // Remove product from grid and update total cost and quantity
+            if (dataGridViewProducts.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Please select a product to delete.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            foreach (DataGridViewRow row in dataGridViewProducts.SelectedRows)
+            {
+                dataGridViewProducts.Rows.Remove(row);
+            }
+
+            UpdateProductSummaryFields();
+        }
+
+        private void UpdateProductSummaryFields()
+        {
+            int totalQty = 0;
+            decimal totalAmount = 0;
+
+            foreach (DataGridViewRow row in dataGridViewProducts.Rows)
+            {
+                if (int.TryParse(row.Cells["ProductQty"].Value?.ToString(), out int qty) &&
+                    decimal.TryParse(row.Cells["ProductAmount"].Value?.ToString(), out decimal amount))
+                {
+                    totalQty += qty;
+                    totalAmount += amount;
+                }
+            }
+
+            txtQuantity.Text = totalQty.ToString();
+            txtTotalCost.Text = totalAmount.ToString("0.00");
+        }
+
         private void LogOrderChange(string orderId, string changeType, string changeDetails)
         {
             try
@@ -209,9 +258,6 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
             }
         }
 
-        // Helper methods
-
-        // Fetches the original order from DB, returns as tuple
         private (string OrderDate, string ProductId, string Quantity, string TotalCost, string CustomerId) GetOriginalOrder(string orderId)
         {
             using (var conn = new MySqlConnection(connStr))
@@ -242,15 +288,12 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
             }
         }
 
-        // Builds a string showing which fields changed, with before and after values
         private string BuildChangeDetails((string OrderDate, string ProductId, string Quantity, string TotalCost, string CustomerId) original)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Order updated:");
             if (original.OrderDate != txtOrderDate.Text)
                 sb.AppendLine($" - OrderDate: '{original.OrderDate}' → '{txtOrderDate.Text}'");
-            if (original.ProductId != txtProductId.Text)
-                sb.AppendLine($" - ProductId: '{original.ProductId}' → '{txtProductId.Text}'");
             if (original.Quantity != txtQuantity.Text)
                 sb.AppendLine($" - Quantity: '{original.Quantity}' → '{txtQuantity.Text}'");
             if (original.TotalCost != txtTotalCost.Text)
@@ -262,11 +305,49 @@ namespace Sunshine_SmileLimitedCo.Sales_Department
             return sb.ToString();
         }
 
-        // Formats the order details for delete log
         private string FormatOrderDetails((string OrderDate, string ProductId, string Quantity, string TotalCost, string CustomerId) order)
         {
             if (order.OrderDate == null) return "(Order not found)";
             return $"Date={order.OrderDate}, ProductID={order.ProductId}, Quantity={order.Quantity}, TotalCost={order.TotalCost}, CustomerID={order.CustomerId}";
+        }
+
+        private void LoadOrderProducts(string orderId)
+        {
+            // Load product rows for the order into the DataGridView
+            try
+            {
+                using (var conn = new MySqlConnection(connStr))
+                {
+                    conn.Open();
+                    string query = @"SELECT op.pid, p.pname, p.pcost, op.pqty, (p.pcost * op.pqty) as amount
+                                     FROM OrderProducts op
+                                     JOIN Product p ON op.pid = p.pid
+                                     WHERE op.oid = @OrderId";
+                    using (var cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@OrderId", orderId);
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            dataGridViewProducts.Rows.Clear();
+                            while (reader.Read())
+                            {
+                                dataGridViewProducts.Rows.Add(
+                                    reader["pid"].ToString(),
+                                    reader["pname"].ToString(),
+                                    reader["pcost"].ToString(),
+                                    reader["pqty"].ToString(),
+                                    reader["amount"].ToString() 
+                                );
+                            }
+                        }
+                    }
+                }
+                UpdateProductSummaryFields();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to load order products: " + ex.Message, "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
