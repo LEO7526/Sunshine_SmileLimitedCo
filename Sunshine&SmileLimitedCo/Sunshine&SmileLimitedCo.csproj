@@ -133,23 +133,62 @@
     <Compile Include="DeliveryNote\DeliveryNote.Designer.cs">
       <DependentUpon>DeliveryNote.cs</DependentUpon>
     </Compile>
+    <Compile Include="HomePage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HomePage.Designer.cs">
+      <DependentUpon>HomePage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Inventory\DetailedMaterialInfo.cs" />
+    <Compile Include="Inventory\detailMaterialInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Inventory\detailMaterialInfo.Designer.cs" />
     <Compile Include="Inventory\InventoryRecord.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Inventory\InventoryRecord.Designer.cs">
       <DependentUpon>InventoryRecord.cs</DependentUpon>
     </Compile>
+    <Compile Include="Inventory\updateMaterial.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Inventory\updateMaterial.Designer.cs" />
     <Compile Include="LoginUI.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="LoginUI.Designer.cs">
       <DependentUpon>LoginUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="CreateOrder.cs">
+    <Compile Include="Sales Department\CreateNewOrder.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CreateOrder.Designer.cs">
-      <DependentUpon>CreateOrder.cs</DependentUpon>
+    <Compile Include="Sales Department\CreateNewOrder.Designer.cs">
+      <DependentUpon>CreateNewOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Sales Department\CustomerList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sales Department\CustomerList.Designer.cs">
+      <DependentUpon>CustomerList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Sales Department\OrderDetail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sales Department\OrderDetail.Designer.cs">
+      <DependentUpon>OrderDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Sales Department\OrderHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sales Department\OrderHistory.Designer.cs">
+      <DependentUpon>OrderHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Sales Department\OrderList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sales Department\OrderList.Designer.cs">
+      <DependentUpon>OrderList.cs</DependentUpon>
     </Compile>
     <Compile Include="Sales Department\detailedOrderInfo.cs">
       <SubType>Form</SubType>
@@ -171,6 +210,12 @@
     <Compile Include="Sales Department\OrderNavigationForm.Designer.cs">
       <DependentUpon>OrderNavigationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Sales Department\PoductList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sales Department\PoductList.Designer.cs">
+      <DependentUpon>PoductList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Sales Department\View and Edit Order.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -180,11 +225,17 @@
     <EmbeddedResource Include="DeliveryNote\DeliveryNote.resx">
       <DependentUpon>DeliveryNote.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="HomePage.resx">
+      <DependentUpon>HomePage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Inventory\detailMaterialInfo.resx" />
+    <EmbeddedResource Include="Inventory\InventoryRecord.resx" />
+    <EmbeddedResource Include="Inventory\updateMaterial.resx" />
     <EmbeddedResource Include="LoginUI.resx">
       <DependentUpon>LoginUI.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CreateOrder.resx">
-      <DependentUpon>CreateOrder.cs</DependentUpon>
+    <EmbeddedResource Include="Sales Department\CustomerList.resx">
+      <DependentUpon>CustomerList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Sales Department\detailedOrderInfo.resx">
       <DependentUpon>detailedOrderInfo.cs</DependentUpon>
@@ -202,8 +253,17 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Sales Department\OrderHistory.resx">
+      <DependentUpon>OrderHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sales Department\OrderList.resx">
+      <DependentUpon>OrderList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Sales Department\OrderNavigationForm.resx">
       <DependentUpon>OrderNavigationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sales Department\PoductList.resx">
+      <DependentUpon>PoductList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Sales Department\View and Edit Order.resx">
       <DependentUpon>View and Edit Order.cs</DependentUpon>
@@ -224,7 +284,22 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Content Include="Resources\Material\1.jpg" />
+    <Content Include="Resources\Material\2.jpg" />
+    <Content Include="Resources\Material\3.jpg" />
+    <Content Include="Resources\Material\4.jpg" />
+    <Content Include="Resources\Material\5.jpg" />
+    <!-- Remove all individually listed PNGs to avoid duplication -->
     <Content Include="Resources\Product\Cyberpunk Truck C204.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Product\LEGO toy.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Product\robot.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Product\toy car.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Product\XDD Wooden Plane.jpg">
@@ -239,7 +314,16 @@
     <Content Include="Resources\Product\RoboKat AI Cat Robot.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\duck %282%29.png" />
   </ItemGroup>
+  <!-- This ItemGroup will include ALL .png files in the folder and copy them always -->
+  <ItemGroup>
+    <Content Include="Resources\Product\large brown teddy bear.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Product\multicolor sticky notes pack.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
